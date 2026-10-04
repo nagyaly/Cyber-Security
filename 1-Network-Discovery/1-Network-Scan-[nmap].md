@@ -94,8 +94,6 @@ Nmap done: 1 IP address (1 host up) scanned in 24.31 seconds
 
 Operating systems can be used to identify possible vulnerabilities.
 ```
-Here is the exact text from the terminal output:
-
 cai@kali:~$ sudo nmap -sV 192.168.70.22
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-10-05 04:35 EDT
 Nmap scan report for 192.168.70.22
