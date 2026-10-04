@@ -71,7 +71,17 @@ sudo ufw <target> <direction> on <interface> proto <protocol> from <source> to <
   + `on eth0` specify the interface eth0
 
 ------------------------------------------------------------------------------
-### 4- Basic Examples
+### 4- Default Policies
+By default, UFW is configured to deny all incoming connections and allow all outgoing connections. This is a secure starting point.
+
+You can view or change these defaults:
+View Defaults: `sudo ufw show added` (Shows rules and defaults)
+Set Defaults (Default configuration):
+`sudo ufw default deny incoming`
+`sudo ufw default allow outgoing`
+
+------------------------------------------------------------------------------
+### 5- Basic Examples
 - Block all incoming connection from the host `192.160.70.5` \
   `sudo ufw deny from 192.160.70.5`
 
@@ -101,7 +111,7 @@ sudo ufw <target> <direction> on <interface> proto <protocol> from <source> to <
 
 
 ------------------------------------------------------------------------------
-### 5- list all rules
+### 6- list all rules
 `sudo ufw status`
 ```bash
 Output
@@ -113,7 +123,7 @@ Anywhere                   DENY        192.160.70.5
 ```
 
 ------------------------------------------------------------------------------
-### 6- Delete a rule
+### 7- Delete a rule
 you can delete a specific rule by doing the following
 
 `sudo ufw delete allow from 192.160.70.5`
@@ -137,7 +147,7 @@ and then delete by index `sudo ufw delete 2`
 >also in ufw **version >= 0.3** you can delete all rules by `sudo ufw reset` then enabling the firewall again `sudo ufw enable`
 
 ------------------------------------------------------------------------------
-### 7- Application Profile
+### 8- Application Profile
 
 Applications that rely on network communications will typically set up a UFW profile such as ssh or nginx web server
 
