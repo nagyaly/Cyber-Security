@@ -129,7 +129,98 @@ Service Info: Hosts: metasploitable.localdomain, irc.Metasploitable.LAN; OSs: Un
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 65.48 seconds
 ```
+---
+### 6- Scan a Host Blocking Ping (Bypassing Windows Firewall)
+`nmap -Pn 192.168.70.21`
+- `-Pn` Treat all hosts as online -- skip host discovery.
 
+When a Windows machine (like Windows 7) is set to a "Public" network profile, the Windows Defender Firewall automatically blocks incoming ICMP Echo Requests (ping). By default, Nmap pings a host before scanning it. If the host drops the ping, Nmap assumes the machine is offline and aborts the port scan. Using `-Pn` forces Nmap to skip the ping phase and directly attack the ports, bypassing this basic firewall restriction.
+
+```text
+Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org) ) at 2024-11-16 12:50 EST
+Nmap scan report for 192.168.70.21
+Host is up.
+Not shown: 994 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+5040/tcp  open  unknown
+7680/tcp  open  pando-pub
+
+Nmap done: 1 IP address (1 host up) scanned in 45.12 seconds
+```
+
+---
+### 7- Perform an Aggressive Scan
+`nmap -A 192.168.70.22`
+- `-A` Enables OS detection, version detection, script scanning, and traceroute.
+
+This is a noisy, comprehensive scan that gives you a massive amount of information by combining several Nmap features into a single command. It is highly detectable by Intrusion Detection Systems (IDS).
+
+```
+Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org) ) at 2024-11-16 12:55 EST
+Nmap scan report for metasploitable.localdomain (192.168.70.22)
+Host is up (0.00041s latency).
+Not shown: 977 closed tcp ports (reset)
+PORT     STATE SERVICE VERSION
+21/tcp   open  ftp     vsftpd 2.3.4
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+22/tcp   open  ssh     OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 60:0f:cf:e1:c0:5f:6a:74:d6:90:24:fa:c4:d5:6c:cd (DSA)
+|_  2048 56:56:24:0f:21:1d:de:a7:2b:ae:61:b1:24:3d:e8:f3 (RSA)
+...
+OS and Service detection performed. Please report any incorrect results at [https://nmap.org/submit/](https://nmap.org/submit/) .
+Nmap done: 1 IP address (1 host up) scanned in 72.15 seconds
+```
+
+---
+
+### 8- Vulnerability Scanning using NSE (Nmap Scripting Engine)
+`nmap --script vuln 192.168.70.21`
+
+- `--script vuln` Loads a category of Nmap scripts designed specifically to check target services for known vulnerabilities and exploits.
+
+Nmap is not just a port scanner; its scripting engine allows it to act as a lightweight vulnerability scanner.
+
+
+```
+Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org) ) at 2024-11-16 13:00 EST
+Nmap scan report for Windows7 (192.168.70.21)
+Host is up (0.0051s latency).
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+
+Host script results:
+| smb-vuln-ms17-010: 
+|   VULNERABLE:
+|   Remote Code Execution vulnerability in Microsoft SMBv1 servers (ms17-010)
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2017-0143
+|     Risk factor: HIGH
+|       A critical remote code execution vulnerability exists in Microsoft SMBv1...
+```
+
+---
+### 9- Perform a Stealth Xmas Scan (Firewall Evasion)
+`nmap -sX 192.168.70.22`
+- `-sX` Sets the FIN, PSH, and URG flags in the TCP packet (lighting it up "like a Christmas tree").   
+
+This is a classic stealth scanning technique used to bypass stateless firewalls and basic packet filters. If the target system follows RFC 793, closed ports will respond with an RST packet, while open or filtered ports will drop the packet and send no response. (Note: This does not work against modern Windows systems, which reply with RST to all Xmas scans regardless of port state).
+
+```
+Starting Nmap 7.94SVN ( [https://nmap.org](https://nmap.org) ) at 2024-11-16 13:05 EST
+Nmap scan report for 192.168.70.22
+Host is up (0.00035s latency).
+Not shown: 977 closed tcp ports (reset)
+PORT     STATE         SERVICE
+21/tcp   open|filtered ftp
+22/tcp   open|filtered ssh
+80/tcp   open|filtered http
+
+Nmap done: 1 IP address (1 host up) scanned in 2.34 seconds
+```
 
 ---
 > For more questions email: nagy@aast.edu

